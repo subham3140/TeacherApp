@@ -166,7 +166,9 @@ def GroupDelete(request, pk):
         messages.error(request, "You are not a creator of this group!!")
     return render(request, 'school_app/index.html', {'token' : get_token(request)})
 
-# Here are the group join view, here a teacher (having a existing group) can join any student he want
+# Here are the group join view, here a teacher (having a existing group) can join any student he want.
+# To add a particular user(student), just create a group and then go to the group detail and now go to the all students to add a particular student (note that the particular student
+# will get added to that group from which you are visiting the all students page. 
 @Token_Required
 def GroupJoin(request, pk, student_pk):
     group = get_object_or_404(StudentGroup, pk = pk)
