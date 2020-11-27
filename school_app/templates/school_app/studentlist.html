@@ -1,0 +1,18 @@
+{% include 'school_app/index.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<div class="container">
+  <div class="jumbotron">
+    {% if token %}
+        <ul>
+          {% for student in students %}
+          <div class="j3">
+            <li>Name : {{ student }} </li>
+            <a class="btn btn-info" href="{% url 'school_app:groupjoin' pk=pk student_pk=student.pk %}?token={{ token }}">Add</a>
+          </div><br>
+          {% endfor %}
+        </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

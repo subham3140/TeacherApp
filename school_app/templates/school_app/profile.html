@@ -1,0 +1,17 @@
+{% include 'school_app/index.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<div class="container">
+  <div class="jumbotron img">
+    <h2> Profile </h2>
+    <ul>
+      <img src="{{ profile.profile_pic.url }}" width="300">
+      <h3>Name : {{ profile.username }}</h3>
+      <h3>Status : {{ profile.status }}</h3>
+      <h3>Email : {{ profile.email }}</h3>
+      <h3>Contact : {{ profile.contact }}</h3>
+      <h3>Address : {{ profile.address}}</h3>
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% include 'school_app/index.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<div class="container">
+  <div class= "j">
+      <div class="jumbotron j1">
+        <h2> Group Detail </h2>
+        <ul>
+          <img src="{{ profile.profile_pic.url }}" width="300">
+          <li>Name : {{ group.group_name }}</li>
+          <li>About : {{ group.about }}</li>
+          <li>Created By : {{ group.created_by }}</li>
+          <li>Created at : {{ group.created_at }}</li>
+        </ul>
+        <a class="btn btn-info" href="{% url 'school_app:groupdelete' pk=pk  %}?token={{ token }}">Delete</a>
+      </div>
+      <div class="jumbotron j2">
+        <h3>Students of this Group</h3>
+        <ul>
+          {% for student in students %}
+              <li>{{ student }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% if token %}
+    <div class="c1">
+      <h3>Click here to see all the students</h3>
+      <a class="btn btn-info" href="{% url 'school_app:studentlist' pk=pk %}?token={{ token }}">All students</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

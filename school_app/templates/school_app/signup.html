@@ -1,0 +1,17 @@
+{% include 'home.html' %}
+{% load bootstrap4 %}
+{% block content %}
+{% include 'school_app/messages.html' %}
+{% block content1 %}
+{% endblock %}
+<div class="container c1">
+  <div class="jumbotron">
+    <h1> Register Here</h1>
+    <form method="POST">
+       {% csrf_token %}
+       {% bootstrap_form form %}
+       <input class="btn btn-info" type="submit" name="" value="Register">
+    </form>
+  </div>
+</div>
+{% endblock %}

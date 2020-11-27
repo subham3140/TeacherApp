@@ -1,0 +1,18 @@
+{% include 'school_app/index.html' %}
+{% load bootstrap4 %}
+{% block content %}
+<div class="container">
+  <div class="jumbotron">
+    {% if token %}
+        <ul>
+          {% for group in groups %}
+            <div class="j3">
+              <li>Group name : {{ group }} created at : {{ group.created_at }}</li>
+              <a class="btn btn-info" href="{% url 'school_app:groupdetail' pk=group.pk %}?token={{ token }}">Detail</a>
+            </div><br>
+          {% endfor %}
+        </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
