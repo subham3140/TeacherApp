@@ -31,9 +31,8 @@ def Token_Required(f):
 
 # Here i have this function which use to decode the anoymous user to non-anoymous one
 # because here we are using custom authentication so we have to tackel with the anoymous user
-def Decode_Anoymous(request):
-    non_anoymous = jwt.decode(request.GET.get("token", None), settings.SECRET_KEY)
-    return UserModel.objects.get(id = non_anoymous["user_id"])
+def ActiveUser(request):
+    return UserModel.objects.get(id = request.user.id)
 
 # Here is the function which use to grab the token for every action so that the validated user can perform any task
 def get_token(request):
@@ -107,7 +106,7 @@ def UpdateProfile(request):
 @Token_Required
 def ProfileView(request):
     context = {
-     'profile' :Decode_Anoymous(request),
+     'profile' : ActiveUser(request),
      'token' : get_token(request)
     }
     return render(request, 'school_app/profile.html', context)
@@ -120,9 +119,9 @@ def CreateGroupView(request):
         group_form = StudentGroupForm(request.POST)
         if group_form.is_valid():
             group_name = group_form.cleaned_data["group_name"]
-            created_by = User.objects.get(id = Decode_Anoymous(request).username.id)
+            created_by = User.objects.get(id = ActiveUser(request).username.id)
             about = group_form.cleaned_data["about"]
-            if Decode_Anoymous(request).status == "teacher":
+            if ActiveUser(request).status == "teacher":
                new_group = StudentGroup(group_name = group_name, created_by = created_by, about = about)
                new_group.save()
                messages.success(request, "You have created a group successfully!!")
@@ -159,21 +158,19 @@ def GroupList(request):
 @Token_Required
 def GroupDelete(request, pk):
     group = get_object_or_404(StudentGroup, pk = pk)
-    if group.created_by == Decode_Anoymous(request).username:
+    if group.created_by == ActiveUser(request).username:
         group.delete()
         messages.success(request, "Group deleted successfully!!")
     else:
         messages.error(request, "You are not a creator of this group!!")
     return render(request, 'school_app/index.html', {'token' : get_token(request)})
 
-# Here are the group join view, here a teacher (having a existing group) can join any student he want.
-# To add a particular user(student), just create a group and then go to the group detail and now go to the all students to add a particular student (note that the particular student
-# will get added to that group from which you are visiting the all students page. 
+# Here are the group join view, here a teacher (having a existing group) can join any student he want
 @Token_Required
 def GroupJoin(request, pk, student_pk):
     group = get_object_or_404(StudentGroup, pk = pk)
     Mystudents = StudentGroupMember.objects.filter(group = group)
-    if group.created_by == Decode_Anoymous(request).username:
+    if group.created_by == ActiveUser(request).username:
           try:
             student = StudentGroupMember.objects.get(member__id=student_pk, group = group)
             messages.info(request, f"{UserModel.objects.get(id=student_pk).username} is already in this group!!")
