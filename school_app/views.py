@@ -29,8 +29,7 @@ def Token_Required(f):
             return f(*args, **kwargs)
     return decorator
 
-# Here i have this function which use to decode the anoymous user to non-anoymous one
-# because here we are using custom authentication so we have to tackel with the anoymous user
+# Here i have this function which just give me the active user
 def ActiveUser(request):
     return UserModel.objects.get(id = request.user.id)
 
