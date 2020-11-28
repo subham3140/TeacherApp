@@ -3,7 +3,7 @@ from .forms import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .models import *
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.conf import settings
 from functools import wraps
 import datetime
@@ -31,7 +31,7 @@ def Token_Required(f):
 
 # Here i have this function which just give me the active user
 def ActiveUser(request):
-    return UserModel.objects.get(id = request.user.id)
+    return UserModel.objects.get(username__id = request.user.id)
 
 # Here is the function which use to grab the token for every action so that the validated user can perform any task
 def get_token(request):
@@ -71,6 +71,7 @@ def LogInView(request):
             password = login_form.cleaned_data["password"]
             user = authenticate(username = username,
                                 password = password)
+            login(request, user)
             if user:
                  token = jwt.encode({"username" : username,
                                     "user_id" : UserModel.objects.get(username = user).id,
